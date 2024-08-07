@@ -1,0 +1,17 @@
+{
+  "name": "pipeline-strategies-pw",
+  "version": "1.0.0",
+  "description": "A project to learn how to run pipelines",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test",
+    "regression": "npx playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.46.0",
+    "@types/node": "^22.1.0"
+  }
+}
