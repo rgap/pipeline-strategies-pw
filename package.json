@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
-    "regression": "npx playwright test",
     "install:browsers": "npx playwright install --with-deps",
     "smoke:example": "npx playwright test tests/example.spec.ts",
-    "smoke:todoapp": "npx playwright test tests/test-examples"
+    "smoke:todoapp": "npx playwright test tests/tests-examples",
+    "smoke:all": "npx playwright test"
   },
   "keywords": [],
   "author": "",

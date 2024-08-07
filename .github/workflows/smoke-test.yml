@@ -1,13 +1,14 @@
-## * ---------- NOMBRE DEL PIPELINE
+## * ------ COMO SE IDENTIFICA EL PIPELINE:
 name: Smoke Test Pipeline
-run-name: ${{github.actor}} triggered Smoke Test
+run-name: ${{github.actor}}👨🏻‍🔬 triggered Smoke Test
 
-## * ---------- CUANDO SE EJECUTA EL PIPELINE
+## * ------ CUANDO SE EJECUTA EL PIPELINE
 on:
   workflow_dispatch:
     inputs:
       environment:
         description: "Environment to run the tests"
+        type: choice
         required: true
         default: "QA"
         options:
@@ -17,28 +18,29 @@ on:
           - "production"
       group:
         description: "Smoke Group to run"
-        required: false
+        type: choice
+        required: true
         options:
           - "example"
-          - "demo-todo-app"
+          - "todoapp"
+          - "all"
 
-## * ----------
+## * -------------
 jobs:
-  test:
-    ## * ---------- PROPIEDADES DEL JOB DEL PIPELINE
+  SmokeTest:
+    ## * ------------- PROPIEDADES DEL JOB DEL PIPELINE
     timeout-minutes: 60
     runs-on: ubuntu-latest
     env:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
       SMOKE_GROUP: ${{ github.event.inputs.group }}
-    ## * ----------
-    ## * ----------
-    ## * ---------- PASOS EN ORDEN DE EJECUCION
+      ## * -------------
+      ## * ------------- PASOS EN ORDEN DE EJECUCIÓN
     steps:
-      - name: Clone repository
+      - name: Clone Repository
         uses: actions/checkout@v4
 
-      - name: Install node
+      - name: Install Node
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
@@ -50,7 +52,8 @@ jobs:
         run: npm run install:browsers
 
       - name: Run Playwright tests
-        run: npm run smoke:${{ env.SMOKE_GROUP }}:${{ env.ENVIRONMENT }}
+        run: |
+          npm run smoke:${{ env.SMOKE_GROUP }}
 
       - uses: actions/upload-artifact@v4
         if: always()
