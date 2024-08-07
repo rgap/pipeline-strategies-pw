@@ -4,26 +4,53 @@ run-name: ${{github.actor}} triggered Smoke Test
 
 ## * ---------- CUANDO SE EJECUTA EL PIPELINE
 on:
-  push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to run the tests"
+        required: true
+        default: "QA"
+        options:
+          - "QA"
+          - "UAT"
+          - "staging"
+          - "production"
+      group:
+        description: "Smoke Group to run"
+        required: false
+        options:
+          - "example"
+          - "demo-todo-app"
+
 ## * ----------
 jobs:
   test:
+    ## * ---------- PROPIEDADES DEL JOB DEL PIPELINE
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
+      SMOKE_GROUP: ${{ github.event.inputs.group }}
+    ## * ----------
+    ## * ---------- PASOS EN ORDEN DE EJECUCION
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Install node
+        uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
       - name: Install dependencies
         run: npm ci
+
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: npm run install:browsers
+
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run smoke:${{ env.SMOKE_GROUP }}:${{ env.ENVIRONMENT }}
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
