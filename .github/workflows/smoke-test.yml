@@ -32,6 +32,7 @@ jobs:
       ENVIRONMENT: ${{ github.event.inputs.environment }}
       SMOKE_GROUP: ${{ github.event.inputs.group }}
     ## * ----------
+    ## * ----------
     ## * ---------- PASOS EN ORDEN DE EJECUCION
     steps:
       - name: Clone repository
